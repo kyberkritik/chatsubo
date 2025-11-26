@@ -173,7 +173,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: fadeInOut 4s ease-in-out forwards;
+      animation: fadeIn 0.5s ease-in-out forwards;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
     @keyframes fadeInOut {
@@ -718,7 +723,10 @@
       
       createParticles(window.innerWidth / 2, 250, event.color);
       
-      // Guardar referencia al evento actual para removerlo cuando Tzara se mueva
+      // Agregar el evento al DOM
+      gameContainer.appendChild(eventEl);
+      
+      // Guardar referencia al evento actual
       if (currentEventElement) {
         currentEventElement.remove();
       }
@@ -738,22 +746,33 @@
       }
     }
 
+    // Variable para trackear el evento activo actualmente
+    let activeEventIndex = -1;
+
     // Check event triggers - funciona en ambas direcciones
     function checkEvents() {
       const currentPos = Math.abs(game.worldOffset);
       
       game.eventPositions.forEach((eventPos, index) => {
-        // Rango de activación más amplio
-        const inRange = currentPos >= eventPos - 200 && currentPos <= eventPos + 200;
+        const distance = Math.abs(currentPos - eventPos);
+        const inRange = distance <= 150;
         
+        // Si entramos al rango de un evento nuevo
         if (inRange && !game.triggeredEvents.has(index)) {
-          // Verificar si estamos lo suficientemente cerca del punto exacto
-          const distance = Math.abs(currentPos - eventPos);
-          
-          // Trigger cuando estamos dentro de 100 metros del evento
-          if (distance <= 100) {
-            triggerEvent(index);
+          triggerEvent(index);
+          activeEventIndex = index;
+        }
+        
+        // Si salimos del rango del evento activo, ocultarlo
+        if (activeEventIndex === index && distance > 250) {
+          if (currentEventElement) {
+            currentEventElement.remove();
+            currentEventElement = null;
+            eventDisplayed = false;
+            eventLogEl.classList.remove('active');
+            eventLogEl.style.display = 'none';
           }
+          activeEventIndex = -1;
         }
       });
     }
@@ -766,30 +785,12 @@
         game.worldOffset -= 4;
         tzaraEl.style.transform = 'scaleX(1)';
         isMoving = true;
-        
-        // Remover evento y letrero cuando Tzara se mueve
-        if (eventDisplayed && currentEventElement) {
-          currentEventElement.remove();
-          currentEventElement = null;
-          eventDisplayed = false;
-          eventLogEl.classList.remove('active');
-          eventLogEl.style.display = 'none';
-        }
       }
       
       if (game.keysPressed['ArrowLeft']) {
         game.worldOffset += 4;
         tzaraEl.style.transform = 'scaleX(-1)';
         isMoving = true;
-        
-        // Remover evento y letrero cuando Tzara se mueve
-        if (eventDisplayed && currentEventElement) {
-          currentEventElement.remove();
-          currentEventElement = null;
-          eventDisplayed = false;
-          eventLogEl.classList.remove('active');
-          eventLogEl.style.display = 'none';
-        }
       }
       
       // Limit world bounds
