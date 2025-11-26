@@ -164,8 +164,16 @@
     .dada-event {
       position: absolute;
       pointer-events: none;
-      z-index: 5;
-      animation: fadeInOut 3s ease-in-out forwards;
+      z-index: 500;
+      width: 90vw;
+      height: 80vh;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeInOut 4s ease-in-out forwards;
     }
 
     @keyframes fadeInOut {
@@ -176,12 +184,14 @@
     }
 
     .brainrot-char {
-      width: 80px;
-      height: 80px;
+      width: 100%;
+      height: 100%;
+      max-width: 800px;
+      max-height: 800px;
       background: #ff00ff;
-      border: 3px solid #00ffff;
+      border: 8px solid #00ffff;
       position: relative;
-      box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+      box-shadow: 0 0 50px rgba(255, 0, 255, 0.8);
       animation: glitchBrainrot 0.3s infinite;
     }
 
@@ -198,10 +208,10 @@
       top: 20px;
       left: 20px;
       z-index: 100;
-      font-size: 10px;
+      font-size: 16px;
       color: #00ff00;
       text-shadow: 0 0 5px #00ff00;
-      line-height: 1.8;
+      line-height: 2;
     }
 
     #eventLog {
@@ -209,17 +219,18 @@
       bottom: 140px;
       left: 50%;
       transform: translateX(-50%);
-      width: 80%;
-      max-width: 600px;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.8);
-      border: 2px solid #00ffff;
-      font-size: 8px;
+      width: 90%;
+      max-width: 900px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.95);
+      border: 4px solid #00ffff;
+      font-size: 18px;
       color: #00ffff;
       text-align: center;
       z-index: 50;
       display: none;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+      line-height: 1.6;
     }
 
     #eventLog.active {
@@ -238,11 +249,12 @@
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-      font-size: 10px;
+      font-size: 20px;
       color: #ff00ff;
       text-shadow: 0 0 10px #ff00ff;
       z-index: 200;
       animation: blink 1.5s infinite;
+      line-height: 2;
     }
 
     @keyframes blink {
@@ -274,7 +286,7 @@
     /* Neon signs */
     .neon-sign {
       position: absolute;
-      font-size: 12px;
+      font-size: 20px;
       color: #00ffff;
       text-shadow: 
         0 0 5px #00ffff,
@@ -523,48 +535,164 @@
       if (event.type === 'brainrot') {
         eventEl.innerHTML = `
           <div class="brainrot-char">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-              <rect x="20" y="20" width="40" height="40" fill="${event.color}" stroke="#000" stroke-width="3"/>
-              <circle cx="30" cy="35" r="5" fill="#000"/>
-              <circle cx="50" cy="35" r="5" fill="#000"/>
-              <rect x="25" y="50" width="30" height="5" fill="#000"/>
-              <text x="40" y="70" font-size="8" fill="#fff" text-anchor="middle">BRAINROT</text>
+            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+              <!-- Cabeza pixel -->
+              <rect x="100" y="50" width="200" height="200" fill="${event.color}" stroke="#000" stroke-width="8"/>
+              
+              <!-- Ojos -->
+              <rect x="130" y="100" width="50" height="50" fill="#000"/>
+              <rect x="220" y="100" width="50" height="50" fill="#000"/>
+              <rect x="145" y="115" width="20" height="20" fill="#fff"/>
+              <rect x="235" y="115" width="20" height="20" fill="#fff"/>
+              
+              <!-- Boca -->
+              <rect x="150" y="180" width="100" height="30" fill="#000"/>
+              <rect x="160" y="185" width="20" height="20" fill="#fff"/>
+              <rect x="190" y="185" width="20" height="20" fill="#fff"/>
+              <rect x="220" y="185" width="20" height="20" fill="#fff"/>
+              
+              <!-- Cuerpo -->
+              <rect x="120" y="250" width="160" height="120" fill="${event.color}" stroke="#000" stroke-width="8"/>
+              
+              <!-- Brazos -->
+              <rect x="50" y="260" width="70" height="40" fill="${event.color}" stroke="#000" stroke-width="6"/>
+              <rect x="280" y="260" width="70" height="40" fill="${event.color}" stroke="#000" stroke-width="6"/>
+              
+              <!-- Texto -->
+              <text x="200" y="390" font-size="28" font-family="Press Start 2P" fill="#fff" text-anchor="middle" stroke="#000" stroke-width="2">BRAINROT</text>
             </svg>
           </div>
         `;
       } else if (event.type === 'urinal') {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="25" y="10" width="30" height="50" rx="15" fill="#fff" stroke="#000" stroke-width="3"/>
-            <circle cx="40" cy="50" r="5" fill="#000"/>
-            <text x="40" y="75" font-size="6" fill="${event.color}" text-anchor="middle">R.MUTT 1917</text>
+          <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; max-height: 80vh;">
+            <!-- Urinal/Fountain -->
+            <ellipse cx="200" cy="150" rx="120" ry="40" fill="#fff" stroke="#000" stroke-width="8"/>
+            <path d="M 80 150 Q 80 350 200 380 Q 320 350 320 150" fill="#fff" stroke="#000" stroke-width="8"/>
+            
+            <!-- Detalles -->
+            <ellipse cx="200" cy="200" rx="60" ry="20" fill="#e0e0e0"/>
+            <circle cx="200" cy="280" r="25" fill="#333"/>
+            <circle cx="200" cy="280" r="15" fill="#000"/>
+            
+            <!-- Sombra */
+            <ellipse cx="200" cy="380" rx="100" ry="20" fill="rgba(0,0,0,0.3)"/>
+            
+            <!-- Texto -->
+            <text x="200" y="440" font-size="32" font-family="Press Start 2P" fill="${event.color}" text-anchor="middle" stroke="#000" stroke-width="2">R.MUTT</text>
+            <text x="200" y="480" font-size="28" font-family="Press Start 2P" fill="${event.color}" text-anchor="middle" stroke="#000" stroke-width="2">1917</text>
           </svg>
         `;
       } else if (event.type === 'poem') {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-            <text x="40" y="20" font-size="8" fill="${event.color}" text-anchor="middle">GADJI</text>
-            <text x="40" y="35" font-size="8" fill="${event.color}" text-anchor="middle">BERI</text>
-            <text x="40" y="50" font-size="8" fill="${event.color}" text-anchor="middle">BIMBA</text>
-            <text x="40" y="65" font-size="8" fill="${event.color}" text-anchor="middle">GLANDRIDI</text>
+          <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <!-- Background -->
+            <rect width="600" height="400" fill="rgba(0,0,0,0.8)"/>
+            
+            <!-- Poema fonético -->
+            <text x="300" y="80" font-size="48" font-family="Press Start 2P" fill="${event.color}" text-anchor="middle">GADJI</text>
+            <text x="300" y="140" font-size="48" font-family="Press Start 2P" fill="#ff00ff" text-anchor="middle">BERI</text>
+            <text x="300" y="200" font-size="48" font-family="Press Start 2P" fill="#00ffff" text-anchor="middle">BIMBA</text>
+            <text x="300" y="260" font-size="48" font-family="Press Start 2P" fill="#ffff00" text-anchor="middle">GLANDRIDI</text>
+            <text x="300" y="320" font-size="36" font-family="Press Start 2P" fill="#00ff00" text-anchor="middle">LAULA LONNI</text>
+            
+            <!-- Decoración -->
+            <circle cx="50" cy="50" r="20" fill="none" stroke="${event.color}" stroke-width="4"/>
+            <circle cx="550" cy="50" r="20" fill="none" stroke="${event.color}" stroke-width="4"/>
+            <circle cx="50" cy="350" r="20" fill="none" stroke="${event.color}" stroke-width="4"/>
+            <circle cx="550" cy="350" r="20" fill="none" stroke="${event.color}" stroke-width="4"/>
+          </svg>
+        `;
+      } else if (event.type === 'iron') {
+        eventEl.innerHTML = `
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <!-- Plancha -->
+            <path d="M 100 100 L 300 100 L 320 250 L 80 250 Z" fill="#666" stroke="#000" stroke-width="6"/>
+            <ellipse cx="200" cy="100" rx="80" ry="30" fill="#888" stroke="#000" stroke-width="6"/>
+            
+            <!-- Clavos (imposible) -->
+            <rect x="130" y="120" width="12" height="100" fill="#ff0000" stroke="#000" stroke-width="3"/>
+            <rect x="180" y="140" width="12" height="80" fill="#ff0000" stroke="#000" stroke-width="3"/>
+            <rect x="230" y="110" width="12" height="110" fill="#ff0000" stroke="#000" stroke-width="3"/>
+            <polygon points="136,120 142,120 139,100" fill="#ff0000" stroke="#000" stroke-width="2"/>
+            <polygon points="186,140 192,140 189,120" fill="#ff0000" stroke="#000" stroke-width="2"/>
+            <polygon points="236,110 242,110 239,90" fill="#ff0000" stroke="#000" stroke-width="2"/>
+            
+            <!-- Texto -->
+            <text x="200" y="320" font-size="28" font-family="Press Start 2P" fill="${event.color}" text-anchor="middle">MAN RAY</text>
+            <text x="200" y="360" font-size="20" font-family="Press Start 2P" fill="${event.color}" text-anchor="middle">CADEAU 1921</text>
+          </svg>
+        `;
+      } else if (event.type === 'collage') {
+        eventEl.innerHTML = `
+          <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <!-- Collage caótico -->
+            <rect x="50" y="50" width="150" height="200" fill="#ff00ff" stroke="#000" stroke-width="6" transform="rotate(-15 125 150)"/>
+            <rect x="200" y="100" width="180" height="120" fill="#00ffff" stroke="#000" stroke-width="6" transform="rotate(10 290 160)"/>
+            <circle cx="350" cy="250" r="80" fill="#ffff00" stroke="#000" stroke-width="6"/>
+            <rect x="100" y="300" width="250" height="100" fill="#00ff00" stroke="#000" stroke-width="6" transform="rotate(-5 225 350)"/>
+            
+            <!-- Elementos Merz -->
+            <text x="130" y="150" font-size="40" fill="#000" transform="rotate(-15 130 150)">M</text>
+            <text x="290" y="170" font-size="36" fill="#000" transform="rotate(10 290 170)">E</text>
+            <text x="350" y="260" font-size="44" fill="#000">R</text>
+            <text x="220" y="360" font-size="38" fill="#000" transform="rotate(-5 220 360)">Z</text>
+            
+            <!-- Título -->
+            <text x="250" y="470" font-size="26" font-family="Press Start 2P" fill="${event.color}" text-anchor="middle">SCHWITTERS</text>
+          </svg>
+        `;
+      } else if (event.type === 'squares') {
+        eventEl.innerHTML = `
+          <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <!-- Cuadrados según las leyes del azar -->
+            <rect x="50" y="80" width="100" height="100" fill="#ff0000" stroke="#000" stroke-width="4" transform="rotate(23 100 130)"/>
+            <rect x="300" y="50" width="80" height="80" fill="#0000ff" stroke="#000" stroke-width="4" transform="rotate(-15 340 90)"/>
+            <rect x="180" y="200" width="120" height="120" fill="#ffff00" stroke="#000" stroke-width="4" transform="rotate(45 240 260)"/>
+            <rect x="400" y="250" width="60" height="60" fill="#00ff00" stroke="#000" stroke-width="4" transform="rotate(-30 430 280)"/>
+            <rect x="100" y="350" width="90" height="90" fill="#ff00ff" stroke="#000" stroke-width="4" transform="rotate(12 145 395)"/>
+            <rect x="320" y="380" width="70" height="70" fill="#00ffff" stroke="#000" stroke-width="4" transform="rotate(-40 355 415)"/>
+            
+            <!-- Texto -->
+            <text x="250" y="470" font-size="24" font-family="Press Start 2P" fill="${event.color}" text-anchor="middle">ARP - CHANCE</text>
+          </svg>
+        `;
+      } else if (event.type === 'boss') {
+        eventEl.innerHTML = `
+          <svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <!-- Boss: La Razón desintegrándose -->
+            <rect width="600" height="500" fill="rgba(0,0,0,0.9)"/>
+            
+            <!-- Cerebro glitcheado -->
+            <ellipse cx="300" cy="200" rx="150" ry="120" fill="#666" stroke="#ff0000" stroke-width="8" opacity="0.8"/>
+            <path d="M 200 180 Q 220 150 250 160 Q 280 140 300 170 Q 330 150 350 175 Q 370 160 380 190" 
+                  stroke="#ff0000" stroke-width="6" fill="none"/>
+            
+            <!-- Grietas -->
+            <line x1="250" y1="150" x2="270" y2="250" stroke="#ff00ff" stroke-width="6"/>
+            <line x1="320" y1="160" x2="300" y2="260" stroke="#00ffff" stroke-width="6"/>
+            <line x1="360" y1="180" x2="340" y2="240" stroke="#ffff00" stroke-width="6"/>
+            
+            <!-- Texto final -->
+            <text x="300" y="350" font-size="48" font-family="Press Start 2P" fill="#ff0000" text-anchor="middle">RATIONALITY</text>
+            <text x="300" y="400" font-size="38" font-family="Press Start 2P" fill="#ff00ff" text-anchor="middle">DESTROYED</text>
+            <text x="300" y="460" font-size="28" font-family="Press Start 2P" fill="${event.color}" text-anchor="middle">DADA WINS</text>
           </svg>
         `;
       } else {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="10" width="60" height="60" fill="${event.color}" stroke="#000" stroke-width="3"/>
-            <text x="40" y="45" font-size="10" fill="#000" text-anchor="middle">DADA</text>
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <rect x="50" y="50" width="300" height="300" fill="${event.color}" stroke="#000" stroke-width="8"/>
+            <text x="200" y="220" font-size="72" font-family="Press Start 2P" fill="#000" text-anchor="middle">DADA</text>
           </svg>
         `;
       }
       
-      eventEl.style.left = (window.innerWidth / 2 - 40) + 'px';
-      eventEl.style.top = (200 + Math.random() * 100) + 'px';
       gameContainer.appendChild(eventEl);
       
       createParticles(window.innerWidth / 2, 250, event.color);
       
-      setTimeout(() => eventEl.remove(), 3000);
+      setTimeout(() => eventEl.remove(), 4000);
       
       // Update HUD
       eventCountEl.textContent = game.eventCount;
