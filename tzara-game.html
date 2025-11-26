@@ -186,13 +186,17 @@
     .brainrot-char {
       width: 100%;
       height: 100%;
-      max-width: 800px;
-      max-height: 800px;
+      max-width: 700px;
+      max-height: 700px;
       background: #ff00ff;
       border: 8px solid #00ffff;
       position: relative;
       box-shadow: 0 0 50px rgba(255, 0, 255, 0.8);
       animation: glitchBrainrot 0.3s infinite;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     @keyframes glitchBrainrot {
@@ -533,24 +537,29 @@
       const eventEl = document.createElement('div');
       eventEl.className = 'dada-event';
       
-      // Forzar posición centrada con estilos inline
-      eventEl.style.position = 'fixed';
-      eventEl.style.left = '50%';
-      eventEl.style.top = '50%';
-      eventEl.style.transform = 'translate(-50%, -50%)';
-      eventEl.style.width = '90vw';
-      eventEl.style.height = '80vh';
-      eventEl.style.maxWidth = '1200px';
-      eventEl.style.maxHeight = '900px';
-      eventEl.style.zIndex = '500';
-      eventEl.style.display = 'flex';
-      eventEl.style.alignItems = 'center';
-      eventEl.style.justifyContent = 'center';
+      // Forzar posición centrada absoluta con estilos inline
+      eventEl.style.cssText = `
+        position: fixed !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 80vw !important;
+        height: 70vh !important;
+        max-width: 1000px !important;
+        max-height: 800px !important;
+        z-index: 9999 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      `;
       
       if (event.type === 'brainrot') {
         eventEl.innerHTML = `
           <div class="brainrot-char">
-            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block; margin: auto;">
               <!-- Cabeza pixel -->
               <rect x="100" y="50" width="200" height="200" fill="${event.color}" stroke="#000" stroke-width="8"/>
               
@@ -580,7 +589,7 @@
         `;
       } else if (event.type === 'urinal') {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; max-height: 80vh;">
+          <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; max-height: 80vh; display: block; margin: auto;">
             <!-- Urinal/Fountain -->
             <ellipse cx="200" cy="150" rx="120" ry="40" fill="#fff" stroke="#000" stroke-width="8"/>
             <path d="M 80 150 Q 80 350 200 380 Q 320 350 320 150" fill="#fff" stroke="#000" stroke-width="8"/>
@@ -600,7 +609,7 @@
         `;
       } else if (event.type === 'poem') {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+          <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block; margin: auto;">
             <!-- Background -->
             <rect width="600" height="400" fill="rgba(0,0,0,0.8)"/>
             
@@ -620,7 +629,7 @@
         `;
       } else if (event.type === 'iron') {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block; margin: auto;">
             <!-- Plancha -->
             <path d="M 100 100 L 300 100 L 320 250 L 80 250 Z" fill="#666" stroke="#000" stroke-width="6"/>
             <ellipse cx="200" cy="100" rx="80" ry="30" fill="#888" stroke="#000" stroke-width="6"/>
@@ -640,7 +649,7 @@
         `;
       } else if (event.type === 'collage') {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+          <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block; margin: auto;">
             <!-- Collage caótico -->
             <rect x="50" y="50" width="150" height="200" fill="#ff00ff" stroke="#000" stroke-width="6" transform="rotate(-15 125 150)"/>
             <rect x="200" y="100" width="180" height="120" fill="#00ffff" stroke="#000" stroke-width="6" transform="rotate(10 290 160)"/>
@@ -659,7 +668,7 @@
         `;
       } else if (event.type === 'squares') {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+          <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block; margin: auto;">
             <!-- Cuadrados según las leyes del azar -->
             <rect x="50" y="80" width="100" height="100" fill="#ff0000" stroke="#000" stroke-width="4" transform="rotate(23 100 130)"/>
             <rect x="300" y="50" width="80" height="80" fill="#0000ff" stroke="#000" stroke-width="4" transform="rotate(-15 340 90)"/>
@@ -674,7 +683,7 @@
         `;
       } else if (event.type === 'boss') {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+          <svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block; margin: auto;">
             <!-- Boss: La Razón desintegrándose -->
             <rect width="600" height="500" fill="rgba(0,0,0,0.9)"/>
             
@@ -696,7 +705,7 @@
         `;
       } else {
         eventEl.innerHTML = `
-          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block; margin: auto;">
             <rect x="50" y="50" width="300" height="300" fill="${event.color}" stroke="#000" stroke-width="8"/>
             <text x="200" y="220" font-size="72" font-family="Press Start 2P" fill="#000" text-anchor="middle">DADA</text>
           </svg>
