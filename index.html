@@ -5,6 +5,8 @@
   <title>Florida 7 Geist – Chatsubo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
+
     :root {
       --bg-top: #050414;
       --bg-mid: #130823;
@@ -236,6 +238,99 @@
       opacity: 0.5;
     }
 
+    /* Broken neon sign */
+    .broken-neon-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .broken-neon-text {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      letter-spacing: 0.08em;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 30px #00ffff,
+        0 0 40px #00ffff,
+        0 0 70px #00ffff,
+        0 0 80px #00ffff,
+        0 0 100px #00ffff,
+        0 0 150px #00ffff;
+      animation: flicker 0.15s infinite alternate;
+      line-height: 1.3;
+    }
+
+    /* Glitchy broken letters */
+    .broken-neon-text .glitch {
+      animation: glitch-flicker 0.1s infinite;
+      opacity: 0.7;
+    }
+
+    .broken-neon-text .dead {
+      opacity: 0;
+      text-shadow: none;
+      animation: dead-flicker 0.3s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow:
+          0 0 10px #fff,
+          0 0 20px #fff,
+          0 0 30px #00ffff,
+          0 0 40px #00ffff,
+          0 0 70px #00ffff,
+          0 0 80px #00ffff,
+          0 0 100px #00ffff,
+          0 0 150px #00ffff;
+      }
+      20%, 24%, 55% {
+        text-shadow:
+          0 0 5px #fff,
+          0 0 10px #fff,
+          0 0 15px #00ffff,
+          0 0 20px #00ffff;
+        opacity: 0.6;
+      }
+    }
+
+    @keyframes glitch-flicker {
+      0%, 50%, 100% {
+        opacity: 0.3;
+        text-shadow:
+          0 0 2px #ff00ff,
+          0 0 5px #ff00ff;
+      }
+      25%, 75% {
+        opacity: 0.8;
+        text-shadow:
+          0 0 10px #00ffff,
+          0 0 20px #00ffff;
+      }
+    }
+
+    @keyframes dead-flicker {
+      0%, 90%, 100% {
+        opacity: 0;
+        text-shadow: none;
+      }
+      95% {
+        opacity: 0.15;
+        text-shadow:
+          0 0 3px #444,
+          0 0 5px #444;
+      }
+    }
+
     /* Responsive tweaks */
     @media (max-width: 768px) {
       .overlay-top {
@@ -243,6 +338,9 @@
       }
       .memorial-frame {
         font-size: 0.65rem;
+      }
+      .broken-neon-text {
+        font-size: clamp(1.5rem, 5vw, 3rem);
       }
     }
   </style>
@@ -259,6 +357,15 @@
         <div class="overlay-top">
           <div class="neon-sign" id="chatsuboSign">CHATSUBO</div>
           <div class="memorial-frame">Ratz RIP 2026</div>
+        </div>
+
+        <!-- Broken neon sign -->
+        <div class="broken-neon-container">
+          <div class="broken-neon-text">
+            EL <span class="glitch">E</span>SPÍRITU ES UN<br>
+            CONCENTRA<span class="dead">D</span>O DE<br>
+            <span class="glitch">F</span>LORIDA <span class="dead">7</span>
+          </div>
         </div>
 
         <!-- Tiny PNG sprite: 1x1 png scaled up (8-bit chip/light) -->
