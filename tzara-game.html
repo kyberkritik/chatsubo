@@ -162,7 +162,7 @@
 
     /* Eventos Dadá */
     .dada-event {
-      position: absolute;
+      position: fixed;
       pointer-events: none;
       z-index: 500;
       width: 90vw;
@@ -215,8 +215,8 @@
     }
 
     #eventLog {
-      position: absolute;
-      bottom: 140px;
+      position: fixed;
+      bottom: 20%;
       left: 50%;
       transform: translateX(-50%);
       width: 90%;
@@ -227,7 +227,7 @@
       font-size: 18px;
       color: #00ffff;
       text-align: center;
-      z-index: 50;
+      z-index: 600;
       display: none;
       box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
       line-height: 1.6;
@@ -378,7 +378,8 @@
       keysPressed: {},
       eventPositions: [500, 1200, 1800, 2500, 3200, 3800, 4500, 5200, 5800, 6500],
       triggeredEvents: new Set(),
-      buildings: []
+      buildings: [],
+      lastCheckedPositions: {} // Para trackear qué posiciones ya fueron revisadas
     };
 
     // Dada Events Database
@@ -708,12 +709,22 @@
       }
     }
 
-    // Check event triggers
+    // Check event triggers - funciona en ambas direcciones
     function checkEvents() {
       const currentPos = Math.abs(game.worldOffset);
+      
       game.eventPositions.forEach((eventPos, index) => {
-        if (currentPos >= eventPos - 100 && currentPos <= eventPos + 100) {
-          triggerEvent(index);
+        // Rango de activación más amplio
+        const inRange = currentPos >= eventPos - 200 && currentPos <= eventPos + 200;
+        
+        if (inRange && !game.triggeredEvents.has(index)) {
+          // Verificar si estamos lo suficientemente cerca del punto exacto
+          const distance = Math.abs(currentPos - eventPos);
+          
+          // Trigger cuando estamos dentro de 100 metros del evento
+          if (distance <= 100) {
+            triggerEvent(index);
+          }
         }
       });
     }
@@ -741,7 +752,17 @@
       cityscapeEl.style.left = (game.worldOffset * 0.3) + 'px';
       
       // Update position display
-      positionEl.textContent = Math.abs(Math.floor(game.worldOffset / 10));
+      const currentMeters = Math.abs(Math.floor(game.worldOffset / 10));
+      positionEl.textContent = currentMeters;
+      
+      // Debug: mostrar próximo evento
+      const currentPos = Math.abs(game.worldOffset);
+      const nextEvent = game.eventPositions.find((pos, idx) => 
+        !game.triggeredEvents.has(idx) && pos > currentPos
+      );
+      const prevEvent = [...game.eventPositions].reverse().find((pos, idx) => 
+        !game.triggeredEvents.has(game.eventPositions.length - 1 - idx) && pos < currentPos
+      );
       
       // Walking animation
       if (isMoving) {
