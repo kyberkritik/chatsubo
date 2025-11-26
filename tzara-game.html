@@ -271,6 +271,63 @@
       50%, 100% { opacity: 0.3; }
     }
 
+    /* Touch controls para móviles */
+    .touch-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      gap: 20px;
+      z-index: 150;
+    }
+
+    .touch-btn {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 0, 255, 0.3);
+      border: 3px solid #ff00ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .touch-btn:active {
+      background: rgba(255, 0, 255, 0.6);
+      box-shadow: 0 0 30px rgba(255, 0, 255, 0.8);
+    }
+
+    /* Mostrar controles touch solo en dispositivos táctiles */
+    @media (hover: none) and (pointer: coarse) {
+      .touch-controls {
+        display: flex;
+      }
+      
+      #instructions {
+        top: 40%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .touch-controls {
+        display: flex;
+      }
+      
+      .touch-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+      }
+    }
+
     .particle {
       position: absolute;
       width: 4px;
@@ -372,6 +429,12 @@
     <div id="instructions">
       ← → CURSORS TO MOVE<br>
       COLLECT DADA ARTIFACTS
+    </div>
+
+    <!-- Touch controls para móviles -->
+    <div class="touch-controls">
+      <button class="touch-btn" id="btnLeft">◄</button>
+      <button class="touch-btn" id="btnRight">►</button>
     </div>
   </div>
 
@@ -501,6 +564,69 @@
         game.keysPressed[e.key] = false;
       }
     });
+
+    // Touch controls para móviles
+    const btnLeft = document.getElementById('btnLeft');
+    const btnRight = document.getElementById('btnRight');
+
+    if (btnLeft && btnRight) {
+      // Botón izquierdo
+      btnLeft.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowLeft'] = true;
+        instructionsEl.style.display = 'none';
+      });
+
+      btnLeft.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowLeft'] = false;
+      });
+
+      btnLeft.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowLeft'] = false;
+      });
+
+      // Botón derecho
+      btnRight.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowRight'] = true;
+        instructionsEl.style.display = 'none';
+      });
+
+      btnRight.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowRight'] = false;
+      });
+
+      btnRight.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowRight'] = false;
+      });
+
+      // También soportar clicks (para testing en desktop)
+      btnLeft.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowLeft'] = true;
+        instructionsEl.style.display = 'none';
+      });
+
+      btnLeft.addEventListener('mouseup', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowLeft'] = false;
+      });
+
+      btnRight.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowRight'] = true;
+        instructionsEl.style.display = 'none';
+      });
+
+      btnRight.addEventListener('mouseup', (e) => {
+        e.preventDefault();
+        game.keysPressed['ArrowRight'] = false;
+      });
+    }
 
     // Create particles
     function createParticles(x, y, color) {
