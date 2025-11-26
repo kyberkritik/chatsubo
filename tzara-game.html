@@ -238,7 +238,7 @@
     }
 
     #eventLog.active {
-      display: block;
+      display: block !important;
       animation: pulse 0.5s ease-in-out;
     }
 
@@ -528,15 +528,12 @@
       
       const event = dadaEvents[index];
       
-      // Show event log
+      // Show event log - se mantiene visible hasta que Tzara se mueva
       eventLogEl.textContent = `[${event.title}] ${event.text}`;
       eventLogEl.classList.add('active');
       eventLogEl.style.color = event.color;
       eventLogEl.style.borderColor = event.color;
-      
-      setTimeout(() => {
-        eventLogEl.classList.remove('active');
-      }, 4000);
+      eventLogEl.style.display = 'block';
       
       // Create visual event
       const eventEl = document.createElement('div');
@@ -770,11 +767,13 @@
         tzaraEl.style.transform = 'scaleX(1)';
         isMoving = true;
         
-        // Remover evento cuando Tzara se mueve
+        // Remover evento y letrero cuando Tzara se mueve
         if (eventDisplayed && currentEventElement) {
           currentEventElement.remove();
           currentEventElement = null;
           eventDisplayed = false;
+          eventLogEl.classList.remove('active');
+          eventLogEl.style.display = 'none';
         }
       }
       
@@ -783,11 +782,13 @@
         tzaraEl.style.transform = 'scaleX(-1)';
         isMoving = true;
         
-        // Remover evento cuando Tzara se mueve
+        // Remover evento y letrero cuando Tzara se mueve
         if (eventDisplayed && currentEventElement) {
           currentEventElement.remove();
           currentEventElement = null;
           eventDisplayed = false;
+          eventLogEl.classList.remove('active');
+          eventLogEl.style.display = 'none';
         }
       }
       
