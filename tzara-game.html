@@ -533,6 +533,20 @@
       const eventEl = document.createElement('div');
       eventEl.className = 'dada-event';
       
+      // Forzar posición centrada con estilos inline
+      eventEl.style.position = 'fixed';
+      eventEl.style.left = '50%';
+      eventEl.style.top = '50%';
+      eventEl.style.transform = 'translate(-50%, -50%)';
+      eventEl.style.width = '90vw';
+      eventEl.style.height = '80vh';
+      eventEl.style.maxWidth = '1200px';
+      eventEl.style.maxHeight = '900px';
+      eventEl.style.zIndex = '500';
+      eventEl.style.display = 'flex';
+      eventEl.style.alignItems = 'center';
+      eventEl.style.justifyContent = 'center';
+      
       if (event.type === 'brainrot') {
         eventEl.innerHTML = `
           <div class="brainrot-char">
