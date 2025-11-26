@@ -41,15 +41,15 @@
       position: relative;
     }
     
-    /* CRT Scanlines */
+    /* CRT Scanlines - reduced */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       background: repeating-linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.15),
-        rgba(0, 0, 0, 0.15) 1px,
+        rgba(0, 0, 0, 0.05),
+        rgba(0, 0, 0, 0.05) 1px,
         transparent 1px,
         transparent 2px
       );
@@ -99,14 +99,6 @@
       align-items: center;
       justify-content: center;
       padding: 1rem;
-      animation: subtle-shake 0.2s infinite;
-    }
-    
-    @keyframes subtle-shake {
-      0%, 100% { transform: translate(0, 0); }
-      25% { transform: translate(0.5px, 0.5px); }
-      50% { transform: translate(-0.5px, -0.5px); }
-      75% { transform: translate(0.5px, -0.5px); }
     }
 
     /* Pixel-city background with parallax */
@@ -123,7 +115,7 @@
         ),
         linear-gradient(to top, rgba(0,0,0,0.9), transparent 40%);
       mix-blend-mode: screen;
-      opacity: 0.35;
+      opacity: 0.12;
       pointer-events: none;
       animation: parallax-sky 40s ease-in-out infinite;
     }
@@ -149,7 +141,7 @@
           #09020d 40px
         );
       mask-image: linear-gradient(to top, black 20%, transparent 100%);
-      opacity: 0.8;
+      opacity: 0.25;
       animation: parallax-buildings 30s ease-in-out infinite;
     }
     
@@ -207,7 +199,7 @@
       height: 40px;
       background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(200,200,255,0.7));
       animation: rain 1.2s linear infinite;
-      opacity: 0.4;
+      opacity: 0.15;
     }
 
     @keyframes rain {
@@ -515,7 +507,7 @@
       font-family: 'Share Tech Mono', monospace;
       font-size: 10px;
       color: var(--neon-green);
-      opacity: 0.4;
+      opacity: 0.12;
       white-space: nowrap;
       pointer-events: none;
       text-shadow: 0 0 5px var(--neon-green);
@@ -549,13 +541,13 @@
       background-image: 
         repeating-linear-gradient(
           0deg,
-          rgba(0, 255, 255, 0.1) 0px,
+          rgba(0, 255, 255, 0.08) 0px,
           transparent 1px,
           transparent 20px
         ),
         repeating-linear-gradient(
           90deg,
-          rgba(0, 255, 255, 0.1) 0px,
+          rgba(0, 255, 255, 0.08) 0px,
           transparent 1px,
           transparent 20px
         );
@@ -567,10 +559,10 @@
     
     @keyframes grid-pulse {
       0%, 100% {
-        opacity: 0.3;
+        opacity: 0.15;
       }
       50% {
-        opacity: 0.6;
+        opacity: 0.25;
       }
     }
   </style>
@@ -606,6 +598,7 @@
           class="png-chip"
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
           alt="Neon pixel"
+          style="display: none;"
         />
 
         <!-- Main SVG scene -->
@@ -768,6 +761,8 @@
             stroke="#ffe766"
             stroke-width="1.4"
             stroke-linecap="round"
+            opacity="0"
+            display="none"
           >
             <!-- Artificialidad sintética -->
             <g>
@@ -808,7 +803,7 @@
           </g>
 
           <!-- Mesa, libro abierto y frase -->
-          <g id="mesaLibro" transform="translate(570, 360)">
+          <g id="mesaLibro" transform="translate(570, 360)" opacity="0" display="none">
             <!-- Mesa 8bit -->
             <rect x="-40" y="0" width="110" height="10" fill="#2a1827" stroke="#0c030f" stroke-width="2" />
             <rect x="-30" y="10" width="15" height="40" fill="#190b18" />
@@ -849,7 +844,7 @@
           </g>
 
           <!-- Barra del bar & brazo robótico sirviendo bebidas -->
-          <g id="barraYBrazo" transform="translate(150, 380)">
+          <g id="barraYBrazo" transform="translate(150, 380)" opacity="0" display="none">
             <!-- Barra (otra capa, encima del footer real) -->
             <rect
               x="0"
@@ -948,7 +943,7 @@
         }, (duration + delay) * 1000);
       }
       
-      setInterval(createParticle, 200);
+      setInterval(createParticle, 800);
     })();
     
     // Data streams (Matrix-style)
@@ -978,7 +973,7 @@
         }, 13000);
       }
       
-      setInterval(createStream, 800);
+      setInterval(createStream, 3000);
     })();
     
     // Random glitch effect
@@ -1028,7 +1023,7 @@
       const rainLayer = document.getElementById("rainLayer");
       if (!rainLayer) return;
 
-      const drops = 55;
+      const drops = 25;
       for (let i = 0; i < drops; i++) {
         const drop = document.createElement("div");
         drop.className = "rain-drop";
