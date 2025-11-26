@@ -220,7 +220,7 @@
 
     #eventLog {
       position: fixed;
-      bottom: 20%;
+      top: 80px;
       left: 50%;
       transform: translateX(-50%);
       width: 90%;
@@ -231,7 +231,7 @@
       font-size: 18px;
       color: #00ffff;
       text-align: center;
-      z-index: 600;
+      z-index: 10000;
       display: none;
       box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
       line-height: 1.6;
@@ -513,6 +513,10 @@
       }
     }
 
+    // Variable global para el evento actual
+    let currentEventElement = null;
+    let eventDisplayed = false;
+
     // Trigger Dada Event
     function triggerEvent(index) {
       if (game.triggeredEvents.has(index)) return;
@@ -520,6 +524,7 @@
       game.triggeredEvents.add(index);
       game.eventCount++;
       game.dadaLevel = Math.min(10, game.dadaLevel + 1);
+      eventDisplayed = true;
       
       const event = dadaEvents[index];
       
@@ -716,7 +721,11 @@
       
       createParticles(window.innerWidth / 2, 250, event.color);
       
-      setTimeout(() => eventEl.remove(), 4000);
+      // Guardar referencia al evento actual para removerlo cuando Tzara se mueva
+      if (currentEventElement) {
+        currentEventElement.remove();
+      }
+      currentEventElement = eventEl;
       
       // Update HUD
       eventCountEl.textContent = game.eventCount;
@@ -760,12 +769,26 @@
         game.worldOffset -= 4;
         tzaraEl.style.transform = 'scaleX(1)';
         isMoving = true;
+        
+        // Remover evento cuando Tzara se mueve
+        if (eventDisplayed && currentEventElement) {
+          currentEventElement.remove();
+          currentEventElement = null;
+          eventDisplayed = false;
+        }
       }
       
       if (game.keysPressed['ArrowLeft']) {
         game.worldOffset += 4;
         tzaraEl.style.transform = 'scaleX(-1)';
         isMoving = true;
+        
+        // Remover evento cuando Tzara se mueve
+        if (eventDisplayed && currentEventElement) {
+          currentEventElement.remove();
+          currentEventElement = null;
+          eventDisplayed = false;
+        }
       }
       
       // Limit world bounds
