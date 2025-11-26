@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tristan Tzara: El Hombre Aproximativo - Cyberpunk Journey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: #0a0a0a;
+      color: #00ff00;
+      overflow: hidden;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    #gameContainer {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(to bottom, #1a0520 0%, #050210 50%, #0a0515 100%);
+      overflow: hidden;
+    }
+
+    /* Scanlines CRT */
+    #gameContainer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        rgba(0, 0, 0, 0.15) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+      pointer-events: none;
+      z-index: 1000;
+      animation: scanline 8s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(4px); }
+    }
+
+    #ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      background: repeating-linear-gradient(
+        90deg,
+        #1a0a2a 0px,
+        #1a0a2a 40px,
+        #0f0515 40px,
+        #0f0515 80px
+      );
+      border-top: 4px solid #ff00ff;
+      z-index: 1;
+    }
+
+    #cityscape {
+      position: absolute;
+      bottom: 120px;
+      left: 0;
+      width: 200%;
+      height: 300px;
+      background-image: 
+        repeating-linear-gradient(
+          90deg,
+          transparent 0px,
+          transparent 60px,
+          rgba(255, 0, 255, 0.1) 60px,
+          rgba(255, 0, 255, 0.1) 62px
+        );
+      transition: left 0.1s linear;
+      z-index: 0;
+    }
+
+    .building {
+      position: absolute;
+      bottom: 0;
+      background: #0a0315;
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    }
+
+    .building::after {
+      content: "";
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      height: 80%;
+      background-image: 
+        repeating-linear-gradient(
+          0deg,
+          transparent 0px,
+          transparent 12px,
+          rgba(0, 255, 255, 0.3) 12px,
+          rgba(0, 255, 255, 0.3) 14px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0px,
+          transparent 12px,
+          rgba(0, 255, 255, 0.3) 12px,
+          rgba(0, 255, 255, 0.3) 14px
+        );
+    }
+
+    #tzara {
+      position: absolute;
+      bottom: 130px;
+      left: 100px;
+      width: 64px;
+      height: 64px;
+      z-index: 10;
+      transition: transform 0.1s;
+    }
+
+    #tzara.walking {
+      animation: walk 0.4s steps(2) infinite;
+    }
+
+    @keyframes walk {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .manuscript {
+      position: absolute;
+      width: 24px;
+      height: 32px;
+      background: #ffeb3b;
+      border: 2px solid #000;
+      top: 16px;
+      left: 48px;
+      box-shadow: 0 0 10px rgba(255, 235, 59, 0.8);
+    }
+
+    .manuscript::before {
+      content: "≈";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      color: #000;
+    }
+
+    /* Eventos Dadá */
+    .dada-event {
+      position: absolute;
+      pointer-events: none;
+      z-index: 5;
+      animation: fadeInOut 3s ease-in-out forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: scale(0.5); }
+      20% { opacity: 1; transform: scale(1); }
+      80% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
+
+    .brainrot-char {
+      width: 80px;
+      height: 80px;
+      background: #ff00ff;
+      border: 3px solid #00ffff;
+      position: relative;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+      animation: glitchBrainrot 0.3s infinite;
+    }
+
+    @keyframes glitchBrainrot {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-2px, 2px); }
+      50% { transform: translate(2px, -2px); }
+      75% { transform: translate(-1px, -1px); }
+    }
+
+    /* HUD */
+    #hud {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      font-size: 10px;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+      line-height: 1.8;
+    }
+
+    #eventLog {
+      position: absolute;
+      bottom: 140px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      max-width: 600px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00ffff;
+      font-size: 8px;
+      color: #00ffff;
+      text-align: center;
+      z-index: 50;
+      display: none;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    #eventLog.active {
+      display: block;
+      animation: pulse 0.5s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.05); }
+    }
+
+    #instructions {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 10px;
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+      z-index: 200;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0.3; }
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #00ffff;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particleFloat 2s ease-out forwards;
+    }
+
+    @keyframes particleFloat {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+      }
+    }
+
+    /* Neon signs */
+    .neon-sign {
+      position: absolute;
+      font-size: 12px;
+      color: #00ffff;
+      text-shadow: 
+        0 0 5px #00ffff,
+        0 0 10px #00ffff,
+        0 0 20px #00ffff;
+      animation: neonFlicker 3s infinite;
+      z-index: 2;
+    }
+
+    @keyframes neonFlicker {
+      0%, 19%, 21%, 23%, 25%, 100% {
+        opacity: 1;
+        text-shadow: 
+          0 0 5px #00ffff,
+          0 0 10px #00ffff,
+          0 0 20px #00ffff;
+      }
+      20%, 24% {
+        opacity: 0.4;
+        text-shadow: 
+          0 0 2px #00ffff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="gameContainer">
+    <div id="cityscape"></div>
+    <div id="ground"></div>
+    
+    <div id="tzara">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <!-- Tzara 8-bit sprite -->
+        <!-- Hat -->
+        <rect x="12" y="4" width="40" height="8" fill="#1a1a2e" stroke="#000" stroke-width="2"/>
+        <rect x="16" y="0" width="32" height="4" fill="#1a1a2e" stroke="#000" stroke-width="2"/>
+        
+        <!-- Head -->
+        <rect x="16" y="12" width="32" height="24" fill="#f7d7c0" stroke="#000" stroke-width="2"/>
+        
+        <!-- Eyes -->
+        <rect x="22" y="20" width="6" height="6" fill="#000"/>
+        <rect x="36" y="20" width="6" height="6" fill="#000"/>
+        
+        <!-- Mouth -->
+        <rect x="26" y="30" width="12" height="3" fill="#000"/>
+        
+        <!-- Body -->
+        <rect x="12" y="36" width="40" height="28" fill="#8b0000" stroke="#000" stroke-width="2"/>
+        
+        <!-- Jacket details -->
+        <rect x="20" y="40" width="8" height="20" fill="#ff1493"/>
+        <rect x="36" y="40" width="8" height="20" fill="#ffeb3b"/>
+        
+        <!-- Arms -->
+        <rect x="4" y="40" width="8" height="16" fill="#f7d7c0" stroke="#000" stroke-width="2"/>
+        <rect x="52" y="40" width="8" height="16" fill="#f7d7c0" stroke="#000" stroke-width="2"/>
+        
+        <!-- Manuscript in hand -->
+        <rect x="52" y="48" width="12" height="16" fill="#ffeb3b" stroke="#000" stroke-width="2"/>
+        <text x="56" y="60" font-size="8" fill="#000">≈</text>
+      </svg>
+    </div>
+
+    <div id="hud">
+      <div>TRISTAN TZARA</div>
+      <div>POSITION: <span id="position">0</span>m</div>
+      <div>EVENTS: <span id="eventCount">0</span>/10</div>
+      <div>DADA LEVEL: <span id="dadaLevel">█████░░░░░</span></div>
+    </div>
+
+    <div id="eventLog"></div>
+
+    <div id="instructions">
+      ← → CURSORS TO MOVE<br>
+      COLLECT DADA ARTIFACTS
+    </div>
+  </div>
+
+  <script>
+    // Game State
+    const game = {
+      tzaraPos: 100,
+      worldOffset: 0,
+      isMoving: false,
+      direction: 0,
+      eventCount: 0,
+      dadaLevel: 0,
+      keysPressed: {},
+      eventPositions: [500, 1200, 1800, 2500, 3200, 3800, 4500, 5200, 5800, 6500],
+      triggeredEvents: new Set(),
+      buildings: []
+    };
+
+    // Dada Events Database
+    const dadaEvents = [
+      {
+        title: "DUCHAMP'S URINAL",
+        text: "Una fuente fluorescente aparece. 'El arte es lo que decimos que es'",
+        color: "#ff00ff",
+        type: "urinal"
+      },
+      {
+        title: "BRAINROT SKIBIDI",
+        text: "Personaje digital corruptivo emerge: SKIBIDI TOILET RIZZ OHIO",
+        color: "#00ff00",
+        type: "brainrot"
+      },
+      {
+        title: "MAN RAY'S IRON",
+        text: "Una plancha con clavos levita. El objeto imposible existe.",
+        color: "#ffff00",
+        type: "iron"
+      },
+      {
+        title: "SIGMA MALE MINDSET",
+        text: "Hologram glitcheado: ONLY GRINDSET NO FEELINGS ALPHA ENERGY",
+        color: "#ff0080",
+        type: "brainrot"
+      },
+      {
+        title: "HUGO BALL'S PHONETIC POEM",
+        text: "gadji beri bimba glandridi laula lonni cadori...",
+        color: "#00ffff",
+        type: "poem"
+      },
+      {
+        title: "GIGACHAD APPEARANCE",
+        text: "Entidad pixelada ultra-masculina: MOGGING SINCE 1916 FR FR",
+        color: "#ff4500",
+        type: "brainrot"
+      },
+      {
+        title: "SCHWITTERS' MERZ",
+        text: "Collage de basura cyber materializa. Todo es arte, nada es arte.",
+        color: "#9370db",
+        type: "collage"
+      },
+      {
+        title: "CAUGHT IN 4K",
+        text: "Cámara holográfica aparece: U WERE CAUGHT LACKING BRO NO CAP",
+        color: "#1e90ff",
+        type: "brainrot"
+      },
+      {
+        title: "ARP'S CHANCE SQUARES",
+        text: "Cuadrados aleatorios caen del cielo. El azar es la nueva lógica.",
+        color: "#32cd32",
+        type: "squares"
+      },
+      {
+        title: "FINAL BOSS: RATIONALITY",
+        text: "La razón misma se desintegra. DADA WINS. GG EZ RATIO + L + BOZO",
+        color: "#ff1493",
+        type: "boss"
+      }
+    ];
+
+    // DOM Elements
+    const tzaraEl = document.getElementById('tzara');
+    const cityscapeEl = document.getElementById('cityscape');
+    const positionEl = document.getElementById('position');
+    const eventCountEl = document.getElementById('eventCount');
+    const dadaLevelEl = document.getElementById('dadaLevel');
+    const eventLogEl = document.getElementById('eventLog');
+    const instructionsEl = document.getElementById('instructions');
+    const gameContainer = document.getElementById('gameContainer');
+
+    // Generate cityscape buildings
+    function generateBuildings() {
+      for (let i = 0; i < 20; i++) {
+        const building = document.createElement('div');
+        building.className = 'building';
+        building.style.left = (i * 300 + Math.random() * 100) + 'px';
+        building.style.width = (60 + Math.random() * 80) + 'px';
+        building.style.height = (100 + Math.random() * 150) + 'px';
+        cityscapeEl.appendChild(building);
+        game.buildings.push(building);
+        
+        // Add random neon signs
+        if (Math.random() > 0.5) {
+          const sign = document.createElement('div');
+          sign.className = 'neon-sign';
+          sign.textContent = ['DADA', 'CYBER', 'VOID', '無', 'NULL', 'ERROR'][Math.floor(Math.random() * 6)];
+          sign.style.top = (20 + Math.random() * 60) + '%';
+          sign.style.left = (10 + Math.random() * 60) + '%';
+          building.appendChild(sign);
+        }
+      }
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        game.keysPressed[e.key] = true;
+        instructionsEl.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        game.keysPressed[e.key] = false;
+      }
+    });
+
+    // Create particles
+    function createParticles(x, y, color) {
+      for (let i = 0; i < 10; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.background = color;
+        particle.style.setProperty('--tx', (Math.random() - 0.5) * 100 + 'px');
+        particle.style.setProperty('--ty', (Math.random() - 0.5) * 100 + 'px');
+        gameContainer.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), 2000);
+      }
+    }
+
+    // Trigger Dada Event
+    function triggerEvent(index) {
+      if (game.triggeredEvents.has(index)) return;
+      
+      game.triggeredEvents.add(index);
+      game.eventCount++;
+      game.dadaLevel = Math.min(10, game.dadaLevel + 1);
+      
+      const event = dadaEvents[index];
+      
+      // Show event log
+      eventLogEl.textContent = `[${event.title}] ${event.text}`;
+      eventLogEl.classList.add('active');
+      eventLogEl.style.color = event.color;
+      eventLogEl.style.borderColor = event.color;
+      
+      setTimeout(() => {
+        eventLogEl.classList.remove('active');
+      }, 4000);
+      
+      // Create visual event
+      const eventEl = document.createElement('div');
+      eventEl.className = 'dada-event';
+      
+      if (event.type === 'brainrot') {
+        eventEl.innerHTML = `
+          <div class="brainrot-char">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="20" width="40" height="40" fill="${event.color}" stroke="#000" stroke-width="3"/>
+              <circle cx="30" cy="35" r="5" fill="#000"/>
+              <circle cx="50" cy="35" r="5" fill="#000"/>
+              <rect x="25" y="50" width="30" height="5" fill="#000"/>
+              <text x="40" y="70" font-size="8" fill="#fff" text-anchor="middle">BRAINROT</text>
+            </svg>
+          </div>
+        `;
+      } else if (event.type === 'urinal') {
+        eventEl.innerHTML = `
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="25" y="10" width="30" height="50" rx="15" fill="#fff" stroke="#000" stroke-width="3"/>
+            <circle cx="40" cy="50" r="5" fill="#000"/>
+            <text x="40" y="75" font-size="6" fill="${event.color}" text-anchor="middle">R.MUTT 1917</text>
+          </svg>
+        `;
+      } else if (event.type === 'poem') {
+        eventEl.innerHTML = `
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <text x="40" y="20" font-size="8" fill="${event.color}" text-anchor="middle">GADJI</text>
+            <text x="40" y="35" font-size="8" fill="${event.color}" text-anchor="middle">BERI</text>
+            <text x="40" y="50" font-size="8" fill="${event.color}" text-anchor="middle">BIMBA</text>
+            <text x="40" y="65" font-size="8" fill="${event.color}" text-anchor="middle">GLANDRIDI</text>
+          </svg>
+        `;
+      } else {
+        eventEl.innerHTML = `
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="60" height="60" fill="${event.color}" stroke="#000" stroke-width="3"/>
+            <text x="40" y="45" font-size="10" fill="#000" text-anchor="middle">DADA</text>
+          </svg>
+        `;
+      }
+      
+      eventEl.style.left = (window.innerWidth / 2 - 40) + 'px';
+      eventEl.style.top = (200 + Math.random() * 100) + 'px';
+      gameContainer.appendChild(eventEl);
+      
+      createParticles(window.innerWidth / 2, 250, event.color);
+      
+      setTimeout(() => eventEl.remove(), 3000);
+      
+      // Update HUD
+      eventCountEl.textContent = game.eventCount;
+      dadaLevelEl.textContent = '█'.repeat(game.dadaLevel) + '░'.repeat(10 - game.dadaLevel);
+      
+      // Check win condition
+      if (game.eventCount >= 10) {
+        setTimeout(() => {
+          eventLogEl.textContent = '🎉 DADA COMPLETE! RATIONALITY DESTROYED! 🎉';
+          eventLogEl.style.color = '#ff00ff';
+          eventLogEl.classList.add('active');
+        }, 3000);
+      }
+    }
+
+    // Check event triggers
+    function checkEvents() {
+      const currentPos = Math.abs(game.worldOffset);
+      game.eventPositions.forEach((eventPos, index) => {
+        if (currentPos >= eventPos - 100 && currentPos <= eventPos + 100) {
+          triggerEvent(index);
+        }
+      });
+    }
+
+    // Game loop
+    function gameLoop() {
+      let isMoving = false;
+      
+      if (game.keysPressed['ArrowRight']) {
+        game.worldOffset -= 4;
+        tzaraEl.style.transform = 'scaleX(1)';
+        isMoving = true;
+      }
+      
+      if (game.keysPressed['ArrowLeft']) {
+        game.worldOffset += 4;
+        tzaraEl.style.transform = 'scaleX(-1)';
+        isMoving = true;
+      }
+      
+      // Limit world bounds
+      game.worldOffset = Math.max(-7000, Math.min(0, game.worldOffset));
+      
+      // Update cityscape parallax
+      cityscapeEl.style.left = (game.worldOffset * 0.3) + 'px';
+      
+      // Update position display
+      positionEl.textContent = Math.abs(Math.floor(game.worldOffset / 10));
+      
+      // Walking animation
+      if (isMoving) {
+        tzaraEl.classList.add('walking');
+      } else {
+        tzaraEl.classList.remove('walking');
+      }
+      
+      // Check for events
+      checkEvents();
+      
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Initialize
+    generateBuildings();
+    gameLoop();
+
+    // Random ambient particles
+    setInterval(() => {
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight * 0.6;
+      const colors = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00'];
+      createParticles(x, y, colors[Math.floor(Math.random() * colors.length)]);
+    }, 2000);
+  </script>
+</body>
+</html>
