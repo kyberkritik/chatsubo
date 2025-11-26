@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Florida 7 Geist – Chatsubo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-top: #050414;
+      --bg-mid: #130823;
+      --bg-bottom: #12030d;
+      --neon-purple: #b800ff;
+      --neon-pink: #ff2e92;
+      --neon-yellow: #ffe766;
+      --neon-orange: #ff7b2c;
+      --neon-red: #ff2951;
+      --bar-surface: #1c101d;
+      --bar-accent: #3a1538;
+      --pixel-outline: #0c030f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #34124a 0, #120414 40%, #030008 100%);
+      color: #eee;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scene {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    /* Pixel-city background */
+    .pixel-skyline {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          to right,
+          #08040f 0,
+          #08040f 3px,
+          #05010a 3px,
+          #05010a 6px
+        ),
+        linear-gradient(to top, rgba(0,0,0,0.9), transparent 40%);
+      mix-blend-mode: screen;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .pixel-buildings {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 45%;
+      background-image:
+        linear-gradient(to top, #08040f 0%, transparent 80%),
+        repeating-linear-gradient(
+          to right,
+          #0f0618 0,
+          #0f0618 20px,
+          #09020d 20px,
+          #09020d 40px
+        );
+      mask-image: linear-gradient(to top, black 20%, transparent 100%);
+      opacity: 0.8;
+    }
+
+    .rain-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      mix-blend-mode: screen;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(200,200,255,0.7));
+      animation: rain 1.2s linear infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes rain {
+      0% { transform: translateY(-50vh); }
+      100% { transform: translateY(100vh); }
+    }
+
+    .content {
+      position: relative;
+      max-width: 1200px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .cocktail-card {
+      position: relative;
+      width: min(90vw, 900px);
+      height: min(90vh, 600px);
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      background: radial-gradient(circle at 30% 0%, rgba(255, 0, 255, 0.12), transparent 60%),
+                  radial-gradient(circle at 70% 100%, rgba(255, 180, 0, 0.12), transparent 60%),
+                  rgba(4, 0, 12, 0.96);
+      box-shadow: 0 0 30px rgba(0,0,0,0.9);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cocktail-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Title bar (Chatsubo & Ratz RIP) */
+    .overlay-top {
+      position: absolute;
+      top: 0.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .neon-sign {
+      padding: 0.35rem 1rem;
+      border-radius: 8px;
+      border: 2px solid var(--neon-purple);
+      text-transform: uppercase;
+      font-size: clamp(0.8rem, 1.4vw, 1rem);
+      letter-spacing: 0.18em;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.15), transparent 60%);
+      box-shadow:
+        0 0 10px rgba(184,0,255,0.8),
+        0 0 25px rgba(255,46,146,0.7);
+      text-shadow:
+        0 0 6px rgba(255,255,255,0.9),
+        0 0 12px rgba(184,0,255,0.9);
+      color: var(--neon-yellow);
+    }
+
+    .neon-sign.flicker {
+      opacity: 0.6;
+      box-shadow:
+        0 0 4px rgba(184,0,255,0.5),
+        0 0 14px rgba(255,46,146,0.4);
+    }
+
+    .memorial-frame {
+      padding: 0.25rem 0.7rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.4);
+      font-size: 0.7rem;
+      background: rgba(10, 2, 20, 0.85);
+      color: #fce5f5;
+      text-shadow: 0 0 4px rgba(255,255,255,0.4);
+      box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+
+    /* PNG sprite (small 8-bit neon chip) */
+    .png-chip {
+      position: absolute;
+      top: 12%;
+      right: 8%;
+      width: 24px;
+      height: 24px;
+      image-rendering: pixelated;
+      transform: scale(2.5);
+      filter: drop-shadow(0 0 12px rgba(255, 230, 120, 0.9));
+      opacity: 0.85;
+    }
+
+    /* Bar footer */
+    .bar-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 110px;
+      background: linear-gradient(to top, #050109 0, transparent 60%);
+      display: flex;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+
+    .bar-surface {
+      width: 100%;
+      height: 75px;
+      background: repeating-linear-gradient(
+        to right,
+        var(--bar-surface) 0,
+        var(--bar-surface) 8px,
+        var(--bar-accent) 8px,
+        var(--bar-accent) 16px
+      );
+      border-top: 2px solid rgba(255,255,255,0.12);
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.9);
+      position: relative;
+      overflow: visible;
+    }
+
+    .bar-highlight {
+      position: absolute;
+      top: 0;
+      left: 5%;
+      right: 5%;
+      height: 3px;
+      background: linear-gradient(to right, rgba(255,255,255,0.3), rgba(255,255,255,0));
+      opacity: 0.5;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      .overlay-top {
+        flex-direction: column;
+      }
+      .memorial-frame {
+        font-size: 0.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="pixel-skyline"></div>
+    <div class="pixel-buildings"></div>
+    <div class="rain-layer" id="rainLayer"></div>
+
+    <div class="content">
+      <div class="cocktail-card">
+        <!-- Top overlay: Chatsubo & Ratz -->
+        <div class="overlay-top">
+          <div class="neon-sign" id="chatsuboSign">CHATSUBO</div>
+          <div class="memorial-frame">Ratz RIP 2026</div>
+        </div>
+
+        <!-- Tiny PNG sprite: 1x1 png scaled up (8-bit chip/light) -->
+        <img
+          class="png-chip"
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+          alt="Neon pixel"
+        />
+
+        <!-- Main SVG scene -->
+        <svg
+          class="cocktail-svg"
+          viewBox="0 0 900 600"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <!-- Gradients -->
+            <linearGradient id="cocktailGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#ffec6f" />
+              <stop offset="30%" stop-color="#ff9c3a" />
+              <stop offset="60%" stop-color="#ff2f4f" />
+              <stop offset="100%" stop-color="#b800ff" />
+            </linearGradient>
+
+            <radialGradient id="glowGradient" cx="50%" cy="0%" r="70%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.85)" />
+              <stop offset="40%" stop-color="rgba(255,255,255,0.05)" />
+              <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+            </radialGradient>
+
+            <linearGradient id="barNeon" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0%" stop-color="#ff2f6f" />
+              <stop offset="50%" stop-color="#ffe766" />
+              <stop offset="100%" stop-color="#ff7b2c" />
+            </linearGradient>
+
+            <filter id="softGlow">
+              <feGaussianBlur stdDeviation="8" result="blur" />
+              <feColorMatrix
+                in="blur"
+                type="matrix"
+                values="1 0 0 0 0
+                        0 1 0 0 0
+                        0 0 1 0 0
+                        0 0 0 0.8 0"
+              />
+            </filter>
+
+            <!-- Arrow head -->
+            <marker
+              id="arrowHead"
+              markerWidth="6"
+              markerHeight="6"
+              refX="5"
+              refY="3"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <polygon points="0,0 6,3 0,6" fill="#ffe766" />
+            </marker>
+
+            <!-- Pixel patterns -->
+            <pattern id="pixelPatternTzara" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="8" height="8" fill="#1c0f2b" />
+              <rect x="0" y="0" width="4" height="4" fill="#ff2f6f" />
+              <rect x="4" y="4" width="4" height="4" fill="#ffb347" />
+            </pattern>
+
+            <pattern id="pixelPatternArm" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="4" height="4" fill="#444b55" />
+              <rect x="0" y="0" width="2" height="2" fill="#9ea4b0" />
+              <rect x="2" y="2" width="2" height="2" fill="#20242b" />
+            </pattern>
+          </defs>
+
+          <!-- Soft halo behind cocktail -->
+          <circle cx="450" cy="220" r="210" fill="url(#glowGradient)" filter="url(#softGlow)" opacity="0.75" />
+
+          <!-- Central cocktail glass -->
+          <g id="cocktailGroup">
+            <!-- Glass outline -->
+            <rect
+              x="380"
+              y="160"
+              width="140"
+              height="220"
+              rx="10"
+              ry="10"
+              fill="rgba(8,0,18,0.9)"
+              stroke="#ffe766"
+              stroke-width="3"
+            />
+            <!-- Liquid -->
+            <rect
+              x="387"
+              y="190"
+              width="126"
+              height="180"
+              fill="url(#cocktailGradient)"
+              opacity="0.96"
+            />
+            <!-- Glass shine -->
+            <rect
+              x="392"
+              y="170"
+              width="22"
+              height="210"
+              fill="rgba(255,255,255,0.18)"
+            />
+            <!-- Base -->
+            <rect
+              x="410"
+              y="385"
+              width="80"
+              height="10"
+              fill="#ffe766"
+              opacity="0.9"
+            />
+            <rect
+              x="395"
+              y="395"
+              width="110"
+              height="12"
+              fill="#f25e9f"
+              opacity="0.9"
+            />
+
+            <!-- Straw (glass straw) -->
+            <rect
+              x="515"
+              y="90"
+              width="10"
+              height="140"
+              fill="rgba(200, 255, 255, 0.4)"
+              stroke="#e4fcff"
+              stroke-width="2"
+              transform="rotate(12 520 160)"
+            />
+            <!-- Plastic orange half -->
+            <g transform="translate(450,150)">
+              <circle r="42" fill="#ffb347" stroke="#ffd97a" stroke-width="3" />
+              <circle r="24" fill="#ff9c3a" />
+              <g stroke="#ffecc2" stroke-width="2">
+                <line x1="0" y1="0" x2="0" y2="-24" />
+                <line x1="0" y1="0" x2="20" y2="-10" />
+                <line x1="0" y1="0" x2="20" y2="10" />
+                <line x1="0" y1="0" x2="0" y2="24" />
+                <line x1="0" y1="0" x2="-20" y2="10" />
+                <line x1="0" y1="0" x2="-20" y2="-10" />
+              </g>
+              <!-- Plastic shine -->
+              <path
+                d="M -25 -25 A 35 35 0 0 1 25 -25"
+                fill="none"
+                stroke="rgba(255,255,255,0.7)"
+                stroke-width="3"
+              />
+            </g>
+          </g>
+
+          <!-- VECTORES DE SENTIDO ALREDEDOR DEL CÓCTEL -->
+          <g
+            id="conceptVectors"
+            font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+            font-size="14"
+            fill="#ffe766"
+            stroke="#ffe766"
+            stroke-width="1.4"
+            stroke-linecap="round"
+          >
+            <!-- Artificialidad sintética -->
+            <g>
+              <line x1="515" y1="230" x2="680" y2="180" marker-end="url(#arrowHead)" />
+              <text x="690" y="178" fill="#ffe766">Artificialidad sintética</text>
+            </g>
+            <!-- Producto urbano -->
+            <g>
+              <line x1="515" y1="260" x2="710" y2="255" marker-end="url(#arrowHead)" />
+              <text x="720" y="262" fill="#ffe766">Producto urbano</text>
+            </g>
+            <!-- Concentrado metafísico -->
+            <g>
+              <line x1="515" y1="290" x2="690" y2="335" marker-end="url(#arrowHead)" />
+              <text x="700" y="340" fill="#ffe766">Concentrado metafísico</text>
+            </g>
+            <!-- Perfume espiritual / mercancía afectiva -->
+            <g>
+              <line x1="435" y1="160" x2="435" y2="70" marker-end="url(#arrowHead)" />
+              <text x="280" y="60" fill="#ffe766">Perfume espiritual /</text>
+              <text x="280" y="78" fill="#ffe766">mercancía afectiva</text>
+            </g>
+            <!-- Estridentismo / choque de registros -->
+            <g>
+              <line x1="380" y1="230" x2="210" y2="185" marker-end="url(#arrowHead)" />
+              <text x="70" y="180" fill="#ffe766">Estridentismo / choque de registros</text>
+            </g>
+            <!-- Tecno-misticismo (Dick / Mercer) -->
+            <g>
+              <line x1="380" y1="260" x2="190" y2="260" marker-end="url(#arrowHead)" />
+              <text x="60" y="270" fill="#ffe766">Tecno-misticismo (Dick / Mercer)</text>
+            </g>
+            <!-- Espíritu como ensamblaje, no esencia -->
+            <g>
+              <line x1="380" y1="295" x2="200" y2="340" marker-end="url(#arrowHead)" />
+              <text x="40" y="350" fill="#ffe766">Espíritu como ensamblaje, no esencia</text>
+            </g>
+          </g>
+
+          <!-- Mesa, libro abierto y frase -->
+          <g id="mesaLibro" transform="translate(570, 360)">
+            <!-- Mesa 8bit -->
+            <rect x="-40" y="0" width="110" height="10" fill="#2a1827" stroke="#0c030f" stroke-width="2" />
+            <rect x="-30" y="10" width="15" height="40" fill="#190b18" />
+            <rect x="40" y="10" width="15" height="40" fill="#190b18" />
+
+            <!-- Libro abierto -->
+            <g transform="translate(10,-25)">
+              <rect x="-60" y="-40" width="120" height="50" fill="#f4f0e4" stroke="#c9c0a5" stroke-width="3" />
+              <line x1="0" y1="-40" x2="0" y2="10" stroke="#d1c8ae" stroke-width="2" />
+              <!-- Texto del libro -->
+              <text x="-55" y="-20" font-size="10" fill="#3e342b">
+                alrededor de ese hueso,
+              </text>
+              <text x="-55" y="-5" font-size="10" fill="#3e342b">
+                el sueño que se llama
+              </text>
+              <text x="-55" y="10" font-size="10" fill="#3e342b">
+                nosotros...
+              </text>
+            </g>
+
+            <!-- Tristan Tzara 8bit -->
+            <g id="tzara8bit" transform="translate(-95,-40)">
+              <!-- Cuerpo -->
+              <rect x="0" y="0" width="26" height="34" fill="url(#pixelPatternTzara)" stroke="#0c030f" stroke-width="2" />
+              <!-- Cabeza -->
+              <rect x="4" y="-18" width="18" height="18" fill="#f7d7c0" stroke="#0c030f" stroke-width="2" />
+              <!-- Sombrero -->
+              <rect x="2" y="-24" width="22" height="6" fill="#1a102b" />
+              <rect x="6" y="-30" width="14" height="6" fill="#1a102b" />
+              <!-- Ojos -->
+              <rect x="8" y="-14" width="3" height="3" fill="#000000" />
+              <rect x="15" y="-14" width="3" height="3" fill="#000000" />
+              <!-- Brazos -->
+              <rect x="-6" y="4" width="6" height="18" fill="#f7d7c0" stroke="#0c030f" stroke-width="2" />
+              <rect x="26" y="4" width="6" height="18" fill="#f7d7c0" stroke="#0c030f" stroke-width="2" />
+            </g>
+          </g>
+
+          <!-- Barra del bar & brazo robótico sirviendo bebidas -->
+          <g id="barraYBrazo" transform="translate(150, 380)">
+            <!-- Barra (otra capa, encima del footer real) -->
+            <rect
+              x="0"
+              y="120"
+              width="600"
+              height="40"
+              fill="#1a0c1a"
+              stroke="#3c1840"
+              stroke-width="3"
+            />
+            <!-- Panel luminoso en la barra -->
+            <rect
+              x="20"
+              y="132"
+              width="190"
+              height="18"
+              fill="url(#barNeon)"
+              opacity="0.7"
+            />
+            <!-- Brazo robótico (pixel-mech) -->
+            <g id="robotArm" transform="translate(420, 60)">
+              <!-- Base -->
+              <rect x="-40" y="60" width="60" height="30" fill="#11131a" stroke="#0c030f" stroke-width="2" />
+              <!-- Columna -->
+              <rect x="-12" y="10" width="16" height="60" fill="url(#pixelPatternArm)" stroke="#000000" stroke-width="2" />
+              <!-- Articulación -->
+              <rect x="-4" y="5" width="8" height="8" fill="#d6dde7" stroke="#000000" stroke-width="2" />
+              <!-- Brazo -->
+              <rect x="0" y="-10" width="56" height="8" fill="#c8ced8" stroke="#000000" stroke-width="2" />
+              <!-- Pinza -->
+              <rect x="56" y="-14" width="6" height="16" fill="#f0f4ff" stroke="#000000" stroke-width="2" />
+              <rect x="62" y="-10" width="4" height="8" fill="#f9b4ce" stroke="#000000" stroke-width="1" />
+              <!-- Bebida en la pinza -->
+              <rect x="68" y="-8" width="10" height="14" fill="#ff2f6f" stroke="#ffe766" stroke-width="1" />
+            </g>
+          </g>
+        </svg>
+
+        <!-- Bar footer (CSS-based) -->
+        <div class="bar-footer">
+          <div class="bar-surface">
+            <div class="bar-highlight"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple neon flicker for CHATSUBO sign
+    (function () {
+      const sign = document.getElementById("chatsuboSign");
+      function flicker() {
+        if (!sign) return;
+        const delay = 200 + Math.random() * 1800;
+        setTimeout(() => {
+          sign.classList.toggle("flicker");
+          flicker();
+        }, delay);
+      }
+      flicker();
+    })();
+
+    // Rain generator
+    (function () {
+      const rainLayer = document.getElementById("rainLayer");
+      if (!rainLayer) return;
+
+      const drops = 55;
+      for (let i = 0; i < drops; i++) {
+        const drop = document.createElement("div");
+        drop.className = "rain-drop";
+        const left = Math.random() * 100;
+        const delay = Math.random() * -1.2;
+        const dur = 0.9 + Math.random() * 1.2;
+        drop.style.left = left + "vw";
+        drop.style.animationDuration = dur + "s";
+        drop.style.animationDelay = delay + "s";
+        rainLayer.appendChild(drop);
+      }
+    })();
+
+    // Gentle floating animation for central cocktail
+    (function () {
+      const svg = document.querySelector(".cocktail-svg");
+      if (!svg) return;
+      const group = svg.getElementById("cocktailGroup");
+      const vectors = svg.getElementById("conceptVectors");
+      const tzara = svg.getElementById("tzara8bit");
+      const arm = svg.getElementById("robotArm");
+      let t = 0;
+
+      function animate() {
+        t += 0.016;
+        const dy = Math.sin(t) * 4;
+        const dyVectors = Math.sin(t * 0.8 + 1.3) * 3;
+
+        if (group) {
+          group.setAttribute("transform", `translate(0, ${dy})`);
+        }
+        if (vectors) {
+          vectors.setAttribute("transform", `translate(0, ${dyVectors})`);
+        }
+        if (tzara) {
+          const offsetX = Math.sin(t * 1.3) * 2;
+          tzara.setAttribute("transform", `translate(${ -95 + offsetX}, -40)`);
+        }
+        if (arm) {
+          const angle = Math.sin(t * 1.4) * 5;
+          arm.setAttribute("transform", `translate(150, 380) translate(420, 60) rotate(${angle}) translate(-420, -60)`);
+        }
+
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>
